@@ -2,7 +2,7 @@ export default function Alerts() {
   return (
     <div className="p-6 space-y-6">
 
-      <h1 className="text-2xl font-bold text-slate-800">
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-gray-100">
         System Alerts
       </h1>
 
@@ -27,7 +27,7 @@ export default function Alerts() {
 
       <div className="space-y-4">
 
-        <div className="bg-white shadow rounded-xl p-4 flex justify-between">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4 flex justify-between">
 
           <div>
             <p className="font-semibold">
@@ -46,7 +46,7 @@ export default function Alerts() {
         </div>
 
 
-        <div className="bg-white shadow rounded-xl p-4 flex justify-between">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4 flex justify-between">
 
           <div>
             <p className="font-semibold">

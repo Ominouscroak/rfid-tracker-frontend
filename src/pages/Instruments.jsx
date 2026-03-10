@@ -32,7 +32,7 @@ export default function Instruments() {
     <div className="p-6 space-y-6">
 
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-800">
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-gray-100">
           Instrument Inventory
         </h1>
 
@@ -48,13 +48,13 @@ export default function Instruments() {
         <input
           type="text"
           placeholder="Search instruments..."
-          className="border rounded-lg px-3 py-2 w-64"
+          className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 w-64 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <select
-          className="border rounded-lg px-3 py-2"
+          className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
@@ -65,7 +65,7 @@ export default function Instruments() {
         </select>
 
         <select
-          className="border rounded-lg px-3 py-2"
+          className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100"
           value={locationFilter}
           onChange={(e) => setLocationFilter(e.target.value)}
         >
@@ -80,11 +80,11 @@ export default function Instruments() {
 
       {/* Table */}
 
-      <div className="bg-white shadow rounded-xl p-4">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4">
 
         <table className="w-full text-left">
 
-          <thead className="border-b text-gray-500 text-sm">
+          <thead className="border-b border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-sm">
             <tr>
               <th className="py-2">RFID Tag</th>
               <th>Instrument</th>
@@ -97,7 +97,7 @@ export default function Instruments() {
 
             {filteredInstruments.map((instrument) => (
 
-              <tr key={instrument.id} className="border-b hover:bg-gray-50">
+              <tr key={instrument.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
 
                 <td className="py-2 font-mono">{instrument.rfid}</td>
 
@@ -106,19 +106,19 @@ export default function Instruments() {
                 <td>
 
                   {instrument.status === "Sterile" && (
-                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
+                    <span className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-2 py-1 rounded text-xs">
                       Sterile
                     </span>
                   )}
 
                   {instrument.status === "In Use" && (
-                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
+                    <span className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-1 rounded text-xs">
                       In Use
                     </span>
                   )}
 
                   {instrument.status === "Missing" && (
-                    <span className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">
+                    <span className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 px-2 py-1 rounded text-xs">
                       Missing
                     </span>
                   )}

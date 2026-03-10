@@ -23,32 +23,32 @@ export default function Scan() {
   return (
     <div className="p-6 space-y-6">
 
-      <h1 className="text-2xl font-bold text-slate-800">
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-gray-100">
         RFID Live Scan
       </h1>
 
       {/* Scanner Status */}
-      <div className="bg-white shadow rounded-xl p-4 flex justify-between items-center">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4 flex justify-between items-center">
         <div>
-          <p className="text-lg font-semibold">Scanner Status</p>
-          <p className="text-sm text-gray-500">Connected to RFID Reader</p>
+          <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">Scanner Status</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Connected to RFID Reader</p>
         </div>
 
-        <span className="px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+        <span className="px-4 py-1 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full text-sm">
           Online
         </span>
       </div>
 
       {/* Scan Table */}
-      <div className="bg-white shadow rounded-xl p-4">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4">
 
-        <h2 className="text-lg font-semibold mb-4">
+        <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
           Recent RFID Scans
         </h2>
 
         <table className="w-full text-left">
-          <thead>
-            <tr className="border-b text-gray-500 text-sm">
+          <thead className="border-b border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-sm">
+            <tr>
               <th className="py-2">RFID Tag</th>
               <th>Instrument</th>
               <th>Location</th>
@@ -58,7 +58,7 @@ export default function Scan() {
 
           <tbody>
             {scans.map((scan) => (
-              <tr key={scan.id} className="border-b hover:bg-gray-50">
+              <tr key={scan.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td className="py-2 font-mono">{scan.tag}</td>
                 <td>{scan.instrument}</td>
                 <td>{scan.location}</td>
