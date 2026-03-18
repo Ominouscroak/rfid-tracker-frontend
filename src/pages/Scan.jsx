@@ -3,28 +3,28 @@ import { getScans } from "../services/api";
 
 export default function Scan() {
   const [scans, setScans] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Function to fetch scans from backend
     const fetchScans = async () => {
       try {
         const res = await getScans();
-        setScans(res.data);
+        setScans(res.data); // populate with backend scans
+        setLoading(false);
       } catch (err) {
-        console.error("Error fetching scans:", err);
+        console.error("Failed to fetch scans:", err);
+        setLoading(false);
       }
     };
 
     fetchScans();
-    const interval = setInterval(fetchScans, 2000);
+
+    // Poll backend every 3 seconds for live updates
+    const interval = setInterval(fetchScans, 3000);
 
     return () => clearInterval(interval);
   }, []);
-
-  const roomLabels = {
-    OR: "Operating Room",
-    STERILIZATION: "Sterilization",
-    STORAGE: "Storage",
-  };
 
   return (
     <div className="p-6 space-y-6">
@@ -32,6 +32,7 @@ export default function Scan() {
         RFID Live Scan
       </h1>
 
+      {/* Scanner Status */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4 flex justify-between items-center">
         <div>
           <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
@@ -41,43 +42,52 @@ export default function Scan() {
             Connected to RFID Reader
           </p>
         </div>
-
         <span className="px-4 py-1 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full text-sm">
           Online
         </span>
       </div>
 
+      {/* Scan Table */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4">
         <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
           Recent RFID Scans
         </h2>
 
-        <table className="w-full text-left">
-          <thead className="border-b border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-sm">
-            <tr>
-              <th className="py-2">RFID Tag</th>
-              <th>Instrument</th>
-              <th>Room</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {scans.map((scan) => (
-              <tr
-                key={scan.id}
-                className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-              >
-                <td className="py-2 font-mono">{scan.rfid_tag}</td>
-                <td>{scan.instrument}</td>
-                <td>{roomLabels[scan.room] || scan.room}</td>
-                <td>
-                  {new Date(scan.timestamp).toLocaleTimeString()}
-                </td>
+        {loading ? (
+          <p className="text-gray-500 dark:text-gray-400">Loading scans...</p>
+        ) : (
+          <table className="w-full text-left">
+            <thead className="border-b border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-sm">
+              <tr>
+                <th className="py-2">RFID Tag</th>
+                <th>Instrument</th>
+                <th>Location</th>
+                <th>Time</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {scans.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-4 text-center text-gray-500 dark:text-gray-400">
+                    No scans yet.
+                  </td>
+                </tr>
+              ) : (
+                scans.map((scan) => (
+                  <tr
+                    key={scan.id}
+                    className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  >
+                    <td className="py-2 font-mono">{scan.rfid_tag}</td>
+                    <td>{scan.instrument || "Unknown"}</td>
+                    <td>{scan.room}</td>
+                    <td>{new Date(scan.timestamp).toLocaleString()}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
