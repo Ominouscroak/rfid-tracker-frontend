@@ -1,3 +1,4 @@
+// src/components/AlertCard.jsx
 export default function AlertCard({ type, title, message, time }) {
   const colorMap = {
     critical: "bg-red-100 text-red-700",
@@ -13,8 +14,8 @@ export default function AlertCard({ type, title, message, time }) {
           {message}
         </p>
       </div>
-
       <div className="text-right space-y-1">
+        {/* FIX: use template string */}
         <span className={`px-3 py-1 text-xs rounded-full ${colorMap[type]}`}>
           {type.toUpperCase()}
         </span>
