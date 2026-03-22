@@ -8,8 +8,29 @@ export default function Alerts() {
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
-        const res = await getAlerts();
-        setAlerts(res.data);
+        let backendAlerts = [];
+
+        try {
+          const res = await getAlerts();
+          backendAlerts = res.data || [];
+        } catch {
+          console.log("Backend alerts not available, using local alerts only");
+        }
+
+        // 🧠 get smart alerts from localStorage
+        const localAlerts =
+          JSON.parse(localStorage.getItem("smartAlerts")) || [];
+
+        // merge both
+        const allAlerts = [...backendAlerts, ...localAlerts];
+
+        // sort newest first
+        allAlerts.sort(
+          (a, b) => new Date(b.time) - new Date(a.time)
+        );
+
+        setAlerts(allAlerts);
+
       } catch (err) {
         console.error("Error fetching alerts:", err);
       }
@@ -25,15 +46,21 @@ export default function Alerts() {
       </h1>
 
       <div className="space-y-4">
-        {alerts.map((alert) => (
-          <AlertCard
-            key={alert.id}
-            type={alert.type}
-            title={alert.title}
-            message={alert.message}
-            time={new Date(alert.time).toLocaleString()}
-          />
-        ))}
+        {alerts.length === 0 ? (
+          <p className="text-gray-500 dark:text-gray-400">
+            No alerts.
+          </p>
+        ) : (
+          alerts.map((alert, index) => (
+            <AlertCard
+              key={index}
+              type={alert.type}
+              title={alert.title}
+              message={alert.message}
+              time={new Date(alert.time).toLocaleString()}
+            />
+          ))
+        )}
       </div>
     </div>
   );

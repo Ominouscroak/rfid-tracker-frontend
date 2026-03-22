@@ -5,12 +5,19 @@ export default function Scan() {
   const [scans, setScans] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Initialize readers with unknown status
+  const [readers, setReaders] = useState([
+    { id: 1, name: "Reader 1 (Operating Room)", online: null },
+    { id: 2, name: "Reader 2 (Sterilization)", online: null },
+    { id: 3, name: "Reader 3 (Storage)", online: null },
+  ]);
+
   useEffect(() => {
-    // Function to fetch scans from backend
+    // Fetch scans from backend
     const fetchScans = async () => {
       try {
         const res = await getScans();
-        setScans(res.data); // populate with backend scans
+        setScans(res.data); 
         setLoading(false);
       } catch (err) {
         console.error("Failed to fetch scans:", err);
@@ -19,12 +26,16 @@ export default function Scan() {
     };
 
     fetchScans();
-
-    // Poll backend every 3 seconds for live updates
     const interval = setInterval(fetchScans, 3000);
-
     return () => clearInterval(interval);
   }, []);
+
+  // Function to update a reader's status (call this when receiving MQTT/backend updates)
+  const updateReaderStatus = (readerId, status) => {
+    setReaders((prev) =>
+      prev.map((r) => (r.id === readerId ? { ...r, online: status } : r))
+    );
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -32,19 +43,49 @@ export default function Scan() {
         RFID Live Scan
       </h1>
 
-      {/* Scanner Status */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4 flex justify-between items-center">
+      {/* Scanner Status Card */}
+      <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4 flex flex-col md:flex-row md:justify-between gap-4">
         <div>
           <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
             Scanner Status
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Connected to RFID Reader
+            Monitoring all connected RFID readers
           </p>
         </div>
-        <span className="px-4 py-1 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full text-sm">
-          Online
-        </span>
+        <div className="flex gap-3 flex-wrap">
+          {readers.map((reader) => (
+            <div
+              key={reader.id}
+              className="px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2"
+              style={{
+                backgroundColor:
+                  reader.online === null
+                    ? "rgb(243, 244, 246)" // gray-100 for unknown
+                    : reader.online
+                    ? "rgb(220, 253, 230)" // green-100
+                    : "rgb(254, 226, 226)", // red-100
+                color:
+                  reader.online === null
+                    ? "rgb(107, 114, 128)" // gray-500
+                    : reader.online
+                    ? "rgb(21, 128, 61)" // green-700
+                    : "rgb(220, 38, 38)", // red-700
+              }}
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  reader.online === null
+                    ? "bg-gray-500"
+                    : reader.online
+                    ? "bg-green-700"
+                    : "bg-red-700"
+                }`}
+              ></span>
+              {reader.name}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Scan Table */}
@@ -68,7 +109,10 @@ export default function Scan() {
             <tbody>
               {scans.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-4 text-center text-gray-500 dark:text-gray-400">
+                  <td
+                    colSpan={4}
+                    className="py-4 text-center text-gray-500 dark:text-gray-400"
+                  >
                     No scans yet.
                   </td>
                 </tr>
